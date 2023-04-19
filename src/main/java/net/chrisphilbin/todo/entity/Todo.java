@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 
@@ -35,11 +36,10 @@ public class Todo {
     @Column(name = "body", nullable = false)
     private String body;
 
-    @NotBlank(message = "Todo must have valid complete status of either true of false.")
-    @NonNull
     @Column(name = "is_complete", nullable = false)
     private Boolean is_complete = false;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
