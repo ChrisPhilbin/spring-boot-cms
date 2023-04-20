@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
@@ -62,6 +64,15 @@ public class TodoController {
         }
         todoService.deleteTodo(todoId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{todoId}")
+    public ResponseEntity<Todo> updateTodo(@PathVariable Long todoId, @RequestBody Todo todo, Principal principal) {
+        Todo oldTodo = todoService.getTodo(todoId);
+        if (oldTodo.getUser().getId() != userService.getUser(principal.getName()).getId()) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Todo>(todoService.updateTodo(todo, oldTodo), HttpStatus.OK);
     }
     
 }
