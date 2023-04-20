@@ -1,8 +1,10 @@
 package net.chrisphilbin.todo.service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +17,9 @@ import net.chrisphilbin.todo.repository.TodoRepository;
 public class TodoServiceImpl implements TodoService {
     
     private TodoRepository todoRepository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public Todo getTodo(Long id) {
@@ -43,6 +48,11 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public List<Todo> getTodos(Long userId) {
         return todoRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Boolean verifyTodoBelongsToUser(Todo todo, Principal principal) {
+        return todo.getUser().getId() != userService.getUser(principal.getName()).getId();
     }
 
     static Todo unwrapTodo(Optional<Todo> entity, Long id) {

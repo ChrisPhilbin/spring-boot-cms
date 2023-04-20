@@ -58,8 +58,7 @@ public class TodoController {
 
     @DeleteMapping("/{todoId}")
     public ResponseEntity<HttpStatus> deleteTodo(@PathVariable Long todoId, Principal principal) {
-        Todo todo = todoService.getTodo(todoId);
-        if (todo.getUser().getId() != userService.getUser(principal.getName()).getId()) {
+        if (todoService.verifyTodoBelongsToUser(todoService.getTodo(todoId), principal)) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         todoService.deleteTodo(todoId);
