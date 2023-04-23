@@ -1,10 +1,10 @@
-package com.ltp.gradesubmission;
+package net.chrisphilbin.todo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GradeSubmissionApplicationTests {
+class TodoListApplicationTests {
 
 	@Test
 	void contextLoads() {
