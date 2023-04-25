@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,14 +58,25 @@ public class UserController {
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
+	//intermediate step to render reset form to user - if the token is valid, display the form to change passwords - if not, display error message
 	@GetMapping("/changePassword")
 	public ResponseEntity<HttpStatus> showChangePasswordPage(@RequestParam String token) {
 		Boolean isTokenValid = userService.validatePasswordResetToken(token);
 		if (isTokenValid == true) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
-
 		return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+	}
+
+	@PostMapping("/savePassword")
+	public ResponseEntity<HttpStatus> saveNewPassword(@RequestParam String token, @RequestBody String password) {
+		User user = userService.getUserIdByToken(token);
+		if (user == null || password == null || !userService.validatePasswordResetToken(token)) { 
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		}
+		user.setPassword(password);
+		userService.saveUser(user);
+		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
 
 	// ======= NON-API =======

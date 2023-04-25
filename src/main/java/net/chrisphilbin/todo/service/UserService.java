@@ -9,4 +9,5 @@ public interface UserService {
     User saveUser(User user);
     void createPasswordResetTokenForUser(User user, String token);
     Boolean validatePasswordResetToken(String token);
+    User getUserIdByToken(String token);
 }

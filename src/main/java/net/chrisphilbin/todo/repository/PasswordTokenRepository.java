@@ -4,4 +4,5 @@ import net.chrisphilbin.todo.entity.PasswordResetToken;;
 
 public interface PasswordTokenRepository extends CrudRepository<PasswordResetToken, Long> {
     PasswordResetToken findByToken(String token);
+    Long findUserIdByToken(String token);
 }

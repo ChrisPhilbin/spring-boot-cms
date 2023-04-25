@@ -42,6 +42,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserIdByToken(String token) {
+        PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
+        User user = passToken.getUser();
+        return user;
+    }
+
+    @Override
     public void createPasswordResetTokenForUser(User user, String token) {
         PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(myToken);
@@ -55,11 +62,6 @@ public class UserServiceImpl implements UserService {
         } else {
             return false;
         }
-
-
-        // return !isTokenFound(passToken) ? "invalidToken"
-        // : isTokenExpired(passToken) ? "expired"
-        // : null;
     }
 
     private boolean isTokenFound(PasswordResetToken passToken) {

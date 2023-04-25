@@ -38,6 +38,7 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
             .antMatchers(HttpMethod.POST, SecurityConstants.RESET_PASSWORD_PATH).permitAll()
             .antMatchers(HttpMethod.GET, SecurityConstants.CHANGE_PASSWORD_PATH).permitAll()
+            .antMatchers(HttpMethod.POST, SecurityConstants.SAVE_PASSWORD_PATH).permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
