@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+	@UniqueConstraint(name = "UniqueUserName", columnNames = {"username"}),
+	@UniqueConstraint(name = "UniqueEmail", columnNames = {"email"})
+})
 /*
  * 'user' is a reserved keyword in SQL, so we name our table users. If you name it user, you will get a org.h2.jdbc.JdbcSQLSyntaxErrorException. 
  *  See https://docs.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql?view=sql-server-ver16 for a list of reserved keywords.
@@ -38,8 +43,14 @@ public class User {
 
 	@NotBlank(message =  "username cannot be blank")
 	@NonNull
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String username;
+
+	@Email
+	@NonNull
+	@NotBlank(message = "email cannot be blank")
+	private String email;
+
 
 	@NotBlank(message =  "password cannot be blank")
     @NonNull
