@@ -1,4 +1,5 @@
-package com.ltp.contacts.config;
+package net.chrisphilbin.todo.config;
+
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
