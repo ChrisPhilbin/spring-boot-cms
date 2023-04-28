@@ -39,6 +39,8 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST, SecurityConstants.RESET_PASSWORD_PATH).permitAll()
             .antMatchers(HttpMethod.GET, SecurityConstants.CHANGE_PASSWORD_PATH).permitAll()
             .antMatchers(HttpMethod.POST, SecurityConstants.SAVE_PASSWORD_PATH).permitAll()
+            .antMatchers("/swagger-ui/**").permitAll()
+            .antMatchers("/v3/api-docs/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
