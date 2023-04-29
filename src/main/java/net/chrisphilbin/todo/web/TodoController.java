@@ -59,7 +59,7 @@ public class TodoController {
     @Operation(summary = "Retrieves single todo item", description = "Returns a single todo item by given ID")
     @ApiResponses( value = {
         @ApiResponse(responseCode = "200", description = "Successful retrieval of todo item", content = @Content(schema = @Schema(implementation = Todo.class))),
-        @ApiResponse(responseCode = "404", description = "Todo item with specified ID doesn't exist", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Todo.class))))
+        @ApiResponse(responseCode = "404", description = "Todo item with specified ID doesn't exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Todo> getTodo(@PathVariable Long id, Principal principal) {
@@ -71,7 +71,7 @@ public class TodoController {
     }
 
     @Operation(summary = "Retrieves all todo items for authorized user", description = "Returns a list of all todo items for user")
-    @ApiResponse(responseCode = "200", description = "Successful retrieval of all todo items for user", content = @Content(schema = @Schema()))
+    @ApiResponse(responseCode = "200", description = "Successful retrieval of all todo items for user", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Todo.class))))
     @GetMapping("/all")
     public ResponseEntity<List<Todo>> getTodos(Principal principal) {
         return new ResponseEntity<>(todoService.getTodos(userService.getUser(principal.getName()).getId()), HttpStatus.OK);
@@ -88,6 +88,10 @@ public class TodoController {
     }
 
     @Operation(summary = "Update a todo by ID", description = "Updates specified todo item by provided ID")
+    @ApiResponses( value = {
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of todo item", content = @Content(schema = @Schema(implementation = Todo.class))),
+        @ApiResponse(responseCode = "404", description = "Todo item with specified ID doesn't exist", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PutMapping("/{todoId}")
     public ResponseEntity<Todo> updateTodo(@PathVariable Long todoId, @RequestBody Todo todo, Principal principal) {
         Todo oldTodo = todoService.getTodo(todoId);
