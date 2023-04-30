@@ -7,6 +7,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import net.chrisphilbin.todo.email.EmailDetails;
+import net.chrisphilbin.todo.entity.User;
+import net.chrisphilbin.todo.exception.EmailNotSentException;
+import net.chrisphilbin.todo.exception.ErrorResponse;
 
 @Service
 public class EmailServiceImpl implements EmailService{
@@ -22,17 +25,25 @@ public class EmailServiceImpl implements EmailService{
     public String sendSimpleMail(EmailDetails details) {
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-
             mailMessage.setFrom(sender);
             mailMessage.setTo(details.getRecipient());
             mailMessage.setText(details.getMessageBody());
             mailMessage.setSubject(details.getSubject());
-
             javaMailSender.send(mailMessage);
-            return "Message sent!";
+            return "ok";
         } catch (Exception e) {
-            return "Error sending message!";
+            throw new EmailNotSentException();
         }
+    }
+
+    @Override
+    public EmailDetails generateResetPasswordEmail(String token, User user) {
+        final String BASEURL = "http://localhost:8080/";
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Reset your password");
+        emailDetails.setMessageBody("Here is the link to reset your password. If this was not initiated by you please ignore this email. \r\n" + BASEURL + "user/changePassword?token=" + token);
+        return emailDetails;
     }
     
 }

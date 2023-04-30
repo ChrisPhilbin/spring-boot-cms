@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.api.Http;
 
 import net.chrisphilbin.todo.entity.User;
+import net.chrisphilbin.todo.service.EmailService;
 import net.chrisphilbin.todo.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +34,9 @@ public class UserController {
 
 
     UserService userService;
-	// MailSender mailSender;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@GetMapping("/{id}")
 	public ResponseEntity<String> findById(@PathVariable Long id) {
@@ -53,8 +57,7 @@ public class UserController {
 		}
 		String token = UUID.randomUUID().toString();
 		userService.createPasswordResetTokenForUser(user, token);
-		// mailSender.send();
-
+		String status = emailService.sendSimpleMail(emailService.generateResetPasswordEmail(token, user));
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
