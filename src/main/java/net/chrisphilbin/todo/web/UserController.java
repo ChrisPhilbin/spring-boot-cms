@@ -1,6 +1,5 @@
 package net.chrisphilbin.todo.web;
 
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -8,9 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.api.Http;
-
 import net.chrisphilbin.todo.entity.User;
 import net.chrisphilbin.todo.service.EmailService;
+import net.chrisphilbin.todo.service.TokenService;
 import net.chrisphilbin.todo.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +28,7 @@ public class UserController {
 
 
     UserService userService;
+	TokenService tokenService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -57,7 +52,7 @@ public class UserController {
 		}
 		String token = UUID.randomUUID().toString();
 		userService.createPasswordResetTokenForUser(user, token);
-		String status = emailService.sendSimpleMail(emailService.generateResetPasswordEmail(token, user));
+		emailService.sendSimpleMail(emailService.generateResetPasswordEmail(token, user));
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
@@ -73,32 +68,17 @@ public class UserController {
 
 	@PostMapping("/savePassword")
 	public ResponseEntity<HttpStatus> saveNewPassword(@RequestParam String token, @RequestBody String password) {
-		User user = userService.getUserIdByToken(token);
-		if (user == null || password == null || !userService.validatePasswordResetToken(token)) { 
-			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+		try {
+			User user = userService.getUserIdByToken(token);
+			if (user == null || password == null || !userService.validatePasswordResetToken(token)) { 
+				return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+			}
+			user.setPassword(password);
+			userService.saveUser(user);
+			tokenService.deleteToken(token);
+			return new ResponseEntity<>(null, HttpStatus.OK);	
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
-		user.setPassword(password);
-		userService.saveUser(user);
-		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
-
-	// ======= NON-API =======
-
-	// final String EMAIL_BODY = "Here is the link to reset your password. If this was not initiated by you please ignore this email.";
-	// final String BASE_URL = "https://does-rover-live.uc.r.appspot.com/";
-
-	// private SimpleMailMessage constructResetTokenEmail(final String contextPath, final String token, final User user) {
-	// 	String url = BASE_URL + "/user/changePassword?token=" + token;
-	// 	return constructEmail("Reset Password", EMAIL_BODY + " \r\n" + url, user);
-	// }
-
-	// private SimpleMailMessage constructEmail(String subject, String body, User user) {
-    //     final SimpleMailMessage email = new SimpleMailMessage();
-    //     email.setSubject(subject);
-    //     email.setText(body);
-    //     // email.setTo(user.getEmail());
-    //     // email.setFrom(env.getProperty("support.email"));
-    //     return email;
-    // }
-
 }
