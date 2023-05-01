@@ -47,9 +47,6 @@ public class UserController {
 	@PostMapping("/resetPassword")
 	public ResponseEntity<HttpStatus> resetPassword(@RequestParam String userName) {
 		User user = userService.getUser(userName);
-		if (user == null) {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-		}
 		String token = UUID.randomUUID().toString();
 		userService.createPasswordResetTokenForUser(user, token);
 		emailService.sendSimpleMail(emailService.generateResetPasswordEmail(token, user));
@@ -59,11 +56,8 @@ public class UserController {
 	//intermediate step to render reset form to user - if the token is valid, display the form to change passwords - if not, display error message
 	@GetMapping("/changePassword")
 	public ResponseEntity<HttpStatus> showChangePasswordPage(@RequestParam String token) {
-		Boolean isTokenValid = userService.validatePasswordResetToken(token);
-		if (isTokenValid == true) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+		userService.validatePasswordResetToken(token);
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 	@PostMapping("/savePassword")

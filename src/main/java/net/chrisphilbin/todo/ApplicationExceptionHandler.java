@@ -16,16 +16,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import net.chrisphilbin.todo.exception.EmailNotSentException;
 import net.chrisphilbin.todo.exception.EntityNotFoundException;
 import net.chrisphilbin.todo.exception.ErrorResponse;
-import net.chrisphilbin.todo.exception.GradeNotFoundException;
-import net.chrisphilbin.todo.exception.StudentNotEnrolledException;
-
+import net.chrisphilbin.todo.exception.ResetTokenNotValidException;
 
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, GradeNotFoundException.class, StudentNotEnrolledException.class})
+    @ExceptionHandler({EmailNotSentException.class, ResetTokenNotValidException.class})
+    public ResponseEntity<Object> handleEmailNotSentException(RuntimeException ex) {
+        ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));  
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex) {
         ErrorResponse error = new ErrorResponse(Arrays.asList(ex.getMessage()));  
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);

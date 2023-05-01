@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import net.chrisphilbin.todo.entity.PasswordResetToken;
 import net.chrisphilbin.todo.entity.User;
 import net.chrisphilbin.todo.exception.EntityNotFoundException;
+import net.chrisphilbin.todo.exception.ResetTokenNotValidException;
 import net.chrisphilbin.todo.repository.PasswordTokenRepository;
 import net.chrisphilbin.todo.repository.UserRepository;
 
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
         if (passToken != null && !isTokenExpired(passToken)) {
             return true;
         } else {
-            return false;
+            throw new ResetTokenNotValidException();
         }
     }
 
