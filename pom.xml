@@ -9,16 +9,16 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>net.chrisphilbin</groupId>
-	<artifactId>does-rover-live</artifactId>
+	<artifactId>spring-boot-cms</artifactId>
 	<version>1</version>
-	<name>does-rover-live</name>
-	<description>Basic todo list API with Spring Boot</description>
+	<name>spring-boot-cms</name>
+	<description>CMS API Backend Utilizing Spring Boot</description>
 	<properties>
 		<java.version>8</java.version>
 	</properties>
 	<profiles>
 		<profile>
-			<id>does-rover-live</id>
+			<id>spring-boot-cms</id>
 		</profile>
 	</profiles>
 	<dependencies>
