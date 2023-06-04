@@ -41,6 +41,11 @@ public class Post {
 
     @JsonIgnore
     @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+    @JsonIgnore
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
