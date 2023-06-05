@@ -8,4 +8,5 @@ import net.chrisphilbin.cms.entity.Post;
 
 public interface PostRepository extends CrudRepository<Post, Long> {
     List<Post> findByUserId(Long userId);
+    List<Post> findByCategoryId(Long categoryId);
 }

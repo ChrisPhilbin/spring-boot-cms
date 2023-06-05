@@ -55,6 +55,11 @@ public class PostServiceImpl implements PostService {
         return post.getUser().getId() != userService.getUser(principal.getName()).getId();
     }
 
+    @Override
+    public List<Post> getPostsByCategoryId(Long categoryId) {
+        return postRepository.findByCategoryId(categoryId);
+    }
+
     static Post unwrapPost(Optional<Post> entity, Long id) {
         if (entity.isPresent()) return entity.get();
         else throw new EntityNotFoundException(id, Post.class);

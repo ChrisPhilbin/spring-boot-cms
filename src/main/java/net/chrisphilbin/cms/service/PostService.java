@@ -11,5 +11,6 @@ public interface PostService {
     Post updatePost(Post newPost, Post oldPost);
     void deletePost(Long id);
     List<Post> getPosts(Long userId);
+    List<Post> getPostsByCategoryId(Long categoryId);
     Boolean verifyPostBelongsToUser(Post todo, Principal principal);
 }
