@@ -30,7 +30,7 @@ public class Category {
 
     @NotBlank(message = "category name cannot be blank.")
     @NonNull
-    @Column(name = "name", nullable = false)
+    @Column(unique = true)
     private String name;
 
     @JsonIgnore

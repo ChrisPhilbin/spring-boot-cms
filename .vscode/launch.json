@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-TodoListApplication<does-rover-live>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "net.chrisphilbin.cms.TodoListApplication",
+      "projectName": "does-rover-live",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

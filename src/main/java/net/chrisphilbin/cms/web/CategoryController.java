@@ -48,6 +48,8 @@ public class CategoryController {
     @Operation(summary = "Create category item", description = "Creates a category from the provided payload")
     @PostMapping
     public ResponseEntity<Category> saveCategory(@Valid @RequestBody Category category, Principal principal) {
+        System.out.println(category);
+        System.out.println("category name");
         return new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
     }
 

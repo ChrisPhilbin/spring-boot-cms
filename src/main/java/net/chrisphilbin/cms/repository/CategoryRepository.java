@@ -8,5 +8,5 @@ import net.chrisphilbin.cms.entity.Category;
 
 
 public interface CategoryRepository extends CrudRepository<Category, Long> {
-    Optional<Category> findByCategoryId(Long categoryId);
+    // Optional<Category> findByCategoryId(Long categoryId);
 }
