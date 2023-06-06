@@ -30,8 +30,8 @@ public class Category {
 
     @NotBlank(message = "category name cannot be blank.")
     @NonNull
-    @Column(unique = true)
-    private String name;
+    @Column(name = "cat_name", unique = true, nullable = false)
+    private String cat_name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

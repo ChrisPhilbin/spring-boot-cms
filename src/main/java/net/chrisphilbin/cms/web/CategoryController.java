@@ -22,7 +22,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+// import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import net.chrisphilbin.cms.entity.Category;
@@ -46,9 +47,9 @@ public class CategoryController {
         @ApiResponse(responseCode = "400", description = "Bad request: unsuccessful submission", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
      })
     @Operation(summary = "Create category item", description = "Creates a category from the provided payload")
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Category> saveCategory(@Valid @RequestBody Category category, Principal principal) {
-        System.out.println(category);
+        System.out.println(category.getCat_name());
         System.out.println("category name");
         return new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
     }

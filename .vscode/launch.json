@@ -9,6 +9,16 @@
       "projectName": "does-rover-live",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-CmsApplication<does-rover-live>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "net.chrisphilbin.cms.CmsApplication",
+      "projectName": "does-rover-live",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
