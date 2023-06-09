@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.*;
 
@@ -39,15 +39,13 @@ public class Post {
     @Column(name = "is_published", nullable = false)
     private Boolean is_published = false;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @JsonIgnore
+    @JsonIgnoreProperties("password")
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    
 }

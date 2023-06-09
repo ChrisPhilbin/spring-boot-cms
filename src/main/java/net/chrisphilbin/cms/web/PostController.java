@@ -2,6 +2,7 @@ package net.chrisphilbin.cms.web;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,8 +28,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import net.chrisphilbin.cms.entity.Category;
 import net.chrisphilbin.cms.entity.Post;
 import net.chrisphilbin.cms.exception.ErrorResponse;
+import net.chrisphilbin.cms.repository.CategoryRepository;
+import net.chrisphilbin.cms.service.CategoryService;
 import net.chrisphilbin.cms.service.PostService;
 import net.chrisphilbin.cms.service.UserService;
 
@@ -40,6 +46,8 @@ public class PostController {
     @Autowired
     PostService postService;
     UserService userService;
+    CategoryService categoryService;
+    CategoryRepository categoryRepository;
 
     @Operation(summary = "Create post item", description = "Creates a post item from the provided payload")
     @ApiResponses(value = {
@@ -47,7 +55,9 @@ public class PostController {
         @ApiResponse(responseCode = "400", description = "Bad request: unsuccessful submission", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
      })
     @PostMapping
-    public ResponseEntity<Post> savePost(@Valid @RequestBody Post post, Principal principal) {
+    public ResponseEntity<Post> savePost(@Valid @RequestBody Post post, @RequestParam String categoryId, Principal principal) {
+        Category category = categoryService.getCategory(Long.parseLong(categoryId));
+        post.setCategory(category);
         post.setUser(userService.getUser(principal.getName()));
         return new ResponseEntity<>(postService.savePost(post), HttpStatus.CREATED);
     }

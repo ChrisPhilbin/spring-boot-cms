@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Category newCategory, Category oldCategory) {
-        oldCategory.setCat_name(newCategory.getCat_name());
+        oldCategory.setName(newCategory.getName());
         return categoryRepository.save(oldCategory);
     }
 
