@@ -33,6 +33,9 @@ public class Category {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    @Column(name = "numberOfPosts")
+    private Integer numberOfPosts = 0;
+
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Post> posts;

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import net.chrisphilbin.cms.entity.Category;
 import net.chrisphilbin.cms.entity.Post;
 import net.chrisphilbin.cms.exception.EntityNotFoundException;
 import net.chrisphilbin.cms.repository.PostRepository;
@@ -17,6 +18,9 @@ import net.chrisphilbin.cms.repository.PostRepository;
 public class PostServiceImpl implements PostService {
     
     private PostRepository postRepository;
+    
+    @Autowired
+    CategoryService categoryService;
 
     @Autowired
     UserService userService;
@@ -29,11 +33,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savePost(Post post) {
+        this.incrementPostCount(post);
         return postRepository.save(post);
     }
 
     @Override
     public void deletePost(Long id) {
+        this.decrementCategoryPostCount(id);
         postRepository.deleteById(id);   
     }
 
@@ -63,5 +69,17 @@ public class PostServiceImpl implements PostService {
     static Post unwrapPost(Optional<Post> entity, Long id) {
         if (entity.isPresent()) return entity.get();
         else throw new EntityNotFoundException(id, Post.class);
+    }
+
+    private void decrementCategoryPostCount(Long postId) {
+        Category category = this.getPost(postId).getCategory();
+        category.setNumberOfPosts(category.getNumberOfPosts() - 1);
+        categoryService.saveCategory(category);
+    }
+
+    private void incrementPostCount(Post post) {
+        Category category = post.getCategory();
+        category.setNumberOfPosts(category.getNumberOfPosts() + 1);
+        categoryService.saveCategory(category);
     }
 }
