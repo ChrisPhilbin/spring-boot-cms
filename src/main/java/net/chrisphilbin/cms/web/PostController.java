@@ -2,7 +2,6 @@ package net.chrisphilbin.cms.web;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -69,11 +67,7 @@ public class PostController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPost(@PathVariable Long id, Principal principal) {
-        Post post = postService.getPost(id);
-        if (post.getUser() != userService.getUser(principal.getName())) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<Post>(post, HttpStatus.OK);
+        return new ResponseEntity<Post>(postService.getPost(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Retrieves all post items for authorized user", description = "Returns a list of all post items for user")
@@ -101,7 +95,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<Post> updatepost(@PathVariable Long postId, @RequestBody Post post, Principal principal) {
         Post oldPost = postService.getPost(postId);
-        if (oldPost.getUser().getId() != userService.getUser(principal.getName()).getId()) {
+        if (postService.verifyPostBelongsToUser(oldPost, principal)) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<Post>(postService.updatePost(post, oldPost), HttpStatus.OK);
