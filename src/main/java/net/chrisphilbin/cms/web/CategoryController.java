@@ -58,22 +58,33 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Retrieves a single category", description = "Returns a single category based on the provided path variable")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of single category item", content = @Content(schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "404", description = "Category with provided ID could not be found", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryDetails(@PathVariable Long id, Principal principal) {
         return new ResponseEntity<>(categoryService.getCategory(id), HttpStatus.OK);
     }
 
+    @Operation(summary = "Retrieves all posts in provided category", description = "Returns a list of all posts in category from provided path variable")
+    @ApiResponse(responseCode = "200", description = "Successful retrieval of all posts in category", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Category.class))))
     @GetMapping("/{id}/all")
     public ResponseEntity<List<Post>> getAllPostsInCategory(@PathVariable Long id, Principal principal) {
         return new ResponseEntity<>(postService.getPostsByCategoryId(id), HttpStatus.OK);
     }
 
+    @Operation(summary = "Updates a single category", description = "Updates a single category based on the provided path variable")
+    @ApiResponse(responseCode = "200", description = "Successful update of single category item", content = @Content(schema = @Schema(implementation = Category.class)))
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category, Principal principal) {
         Category oldCategory = categoryService.getCategory(id);
-        return new ResponseEntity<>(categoryService.updateCategory(category, oldCategory), HttpStatus.OK);
+        return new ResponseEntity<Category>(categoryService.updateCategory(category, oldCategory), HttpStatus.OK);
     }
 
+    @Operation(summary = "Deletes a single category", description = "Delets a single category based on the provided path variable")
+    @ApiResponse(responseCode = "204", description = "Successful deletion of single category item", content = @Content(schema = @Schema(implementation = Category.class)))
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCategory(@PathVariable Long id, Principal principal) {
         categoryService.deleteCategory(id);
