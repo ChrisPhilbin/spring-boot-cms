@@ -70,11 +70,11 @@ public class PostController {
         return new ResponseEntity<Post>(postService.getPost(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "Retrieves all post items for authorized user", description = "Returns a list of all post items for user")
-    @ApiResponse(responseCode = "200", description = "Successful retrieval of all post items for user", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Post.class))))
+    @Operation(summary = "Retrieves all post items", description = "Returns a list of all post items")
+    @ApiResponse(responseCode = "200", description = "Successful retrieval of all post items", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Post.class))))
     @GetMapping("/all")
     public ResponseEntity<List<Post>> getPosts(Principal principal) {
-        return new ResponseEntity<>(postService.getPosts(userService.getUser(principal.getName()).getId()), HttpStatus.OK);
+        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete a post by ID", description = "Deletes specified post item by provided ID")

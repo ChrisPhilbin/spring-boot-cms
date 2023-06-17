@@ -1,6 +1,7 @@
 package net.chrisphilbin.cms.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,14 @@ public class PostServiceImpl implements PostService {
         oldPost.setTitle(newPost.getTitle());
         oldPost.setIs_published(newPost.getIs_published());
         return postRepository.save(oldPost);
+    }
+
+    @Override
+    public List<Post> getAllPosts() {
+        Iterable<Post> postItr = postRepository.findAll();
+        List<Post> allPosts = new ArrayList<Post>();
+        postItr.forEach(allPosts::add);
+        return allPosts;
     }
 
     @Override
