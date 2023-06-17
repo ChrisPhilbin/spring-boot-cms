@@ -33,7 +33,7 @@ public class Post {
 
     @NotBlank(message = "Post body cannot be blank.")
     @NonNull
-    @Column(name = "body", nullable = false)
+    @Column(name = "body", columnDefinition = "text", nullable = false)
     private String body;
 
     @Column(name = "is_published", nullable = false)
